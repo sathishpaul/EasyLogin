@@ -1,0 +1,84 @@
+body {
+    background-color: #F5F5F5;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+.container {
+    padding-top: 30px;
+    width: 1050px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#addUrlDialog {
+    margin-left: auto;
+    margin-right: auto;
+    width: 300px;
+    border: 1px solid rgb(148, 148, 148);
+    border-radius: 5px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+
+}
+
+.textContainerStyle {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 15px;
+}
+
+#addUrlDialog input[type="text"], input[type="password"] {
+    height: 34px;
+    font-size: medium;
+    margin-bottom: 10px;
+}
+
+.titleClass {
+    border-bottom: 1px solid rgb(148, 148, 148);
+
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#saveBtn{
+    margin-left: 90px;
+}
+
+#addBtn {
+    margin-bottom: 50px;
+}
+
+.hide {
+    display:none;
+}
+
+.show {
+    display: block;
+}
+
+.card {
+    background:#FFF;
+    border:1px solid #AAA;
+    border-bottom:3px solid #BBB;
+    padding:0px;
+    margin:15px;
+    width: 300px;
+    overflow:hidden;
+}
+
+.card2 {
+    background: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0px 0px 15px 0px #ccc;
+    width: 300px;
+    height: 75px;
+    float: left;
+    margin-right: 55px;
+    margin-bottom: 25px;
+}
+
+.card2 p {
+    text-align: center;
+}
+
