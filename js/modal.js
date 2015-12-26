@@ -21,6 +21,7 @@ var styles = {
   },
   title: {
     margin: 0,
+    padding: '0 0 10px',
     color: '#C94E50',
     fontWeight: 400
   }
@@ -39,10 +40,11 @@ var DialogComponent = React.createClass({
                 <button onClick={this.showModal}>Open</button>
                 <Modal ref="modal">
                   <div style={styles.container}>
-                    <h2 style={styles.title}>I am a dialog</h2>
+                    <h2 style={styles.title}>Add a new Login Item</h2>
                     <div className="formContainer">
                       <input type="text" ref="username" placeholder="Enter username here..."/>
                       <input type="password" ref="password" />
+
                       <button style={styles.btn} onClick={this.hideModal}>Close</button>
                     </div>
                   </div>
