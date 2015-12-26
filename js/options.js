@@ -4,11 +4,13 @@
  *  - create/save new item
  */
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var Card = require('./card');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Card from './card';
+import DialogComponent from './modal';
 
-ReactDOM.render(<Card name="myCard1"
+ReactDOM.render(<DialogComponent />, document.querySelector("#dialogContainer"));
+ReactDOM.render(<Card name="myCard1" url="http://oracle.com"
     />, document.querySelector('#cardContainer'));
 
 var myCollection = "ICS_LOGIN_COLLECTION";
