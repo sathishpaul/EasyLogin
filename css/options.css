@@ -5,10 +5,17 @@ body {
 
 .container {
     display: flex;
-    justify-items; center;
+    justify-items: center;
     align-items: center;
     flex-direction: column;
     padding-top: 30px;
+}
+
+.loginItemsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
 }
 
 #addUrlDialog {
@@ -19,9 +26,12 @@ body {
     border-radius: 5px;
     padding-bottom: 10px;
     padding-top: 10px;
-
 }
 
+.addBtnContainer {
+    display: flex;
+    align-items: flex-end;
+}
 .textContainerStyle {
     margin-left: auto;
     margin-right: auto;

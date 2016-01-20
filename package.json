@@ -38,6 +38,8 @@
   },
   "dependencies": {
     "boron": "^0.2.2",
-    "normalize.css": "^3.0.3"
+    "normalize.css": "^3.0.3",
+    "react": "^0.14.6",
+    "react-bootstrap": "^0.28.2"
   }
 }

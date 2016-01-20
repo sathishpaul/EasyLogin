@@ -6,12 +6,14 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Card from './card';
-import DialogComponent from './modal';
 
-ReactDOM.render(<DialogComponent />, document.querySelector("#dialogContainer"));
-ReactDOM.render(<Card name="myCard1" url="http://oracle.com"
-    />, document.querySelector('#cardContainer'));
+import EasyLogin from './components/EasyLogin';
+
+ReactDOM.render(<EasyLogin />, document.querySelector("#cardContainer"));
+//
+//ReactDOM.render(<DialogComponent />, document.querySelector("#dialogContainer"));
+//ReactDOM.render(<LoginItem name="myCard1" url="http://oracle.com"
+//    />, document.querySelector('#cardContainer'));
 
 var myCollection = "ICS_LOGIN_COLLECTION";
 var loadExistingInfo = function () {
