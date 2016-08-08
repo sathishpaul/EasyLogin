@@ -2,7 +2,6 @@
 	Component to render a dialog and an add button
 */
 import React from 'react';
-import Modal from 'boron/ScaleModal';
 
 var styles = {
   btn: {
@@ -38,17 +37,7 @@ var DialogComponent = React.createClass({
         return (
             <div>
                 <button onClick={this.showModal}>Open</button>
-                <Modal ref="modal">
-                  <div style={styles.container}>
-                    <h2 style={styles.title}>Add a new Login Item</h2>
-                    <div className="formContainer">
-                      <input type="text" ref="username" placeholder="Enter username here..."/>
-                      <input type="password" ref="password" />
 
-                      <button style={styles.btn} onClick={this.hideModal}>Close</button>
-                    </div>
-                  </div>
-                </Modal>
             </div>
         );
     }

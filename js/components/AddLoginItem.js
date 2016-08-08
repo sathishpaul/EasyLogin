@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Button } from 'react-bootstrap';
 
 var AddLoginItem = React.createClass({
 
@@ -32,6 +31,7 @@ var AddLoginItem = React.createClass({
 
                 <div>
                   <button type="button" className="btn btn-primary">Add attribute</button>
+
                 </div>
                 <div className="input-group">
                   <span className="input-group-addon" id="sizing-addon2">@</span>

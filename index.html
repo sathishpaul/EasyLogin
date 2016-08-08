@@ -1,33 +1,24 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <link href="build/css/options.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-        integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-</head>
-<body>
-  <div class="container">
-    <div>
-      <h3>Easy Login</h3>
-    </div>
-    <div id="dialogContainer"></div>
-    <div id="cardContainer"></div>
-  </div>
-  <div id="addUrlDialog" class="hide"> 
-    <div class="titleClass"><h4>Add New Login</h4></div>
-    <div class="textContainerStyle">
-      <input type="text" id="name" size="25" placeholder="Enter name"/>
-      <input type="text" id="url" size="25" placeholder="Enter url"/>
-      <input type="password" id="password" size="25" placeholder="Enter your password here.."/>     
-    </div>  
-    <button id="saveBtn">Save</button>
-    <button id="cancelBtn" style="margin-left: 25px;">Cancel</button>
-  </div>
-  <script src="build/options.js"></script>
-  <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
-          integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous">
-
-  </script>
-</body>
+    <head>
+        <link href="build/css/options.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+    </head>
+    <body>
+        <div id="appContainer">
+        </div>
+        <div id="addUrlDialog" class="hide">
+            <div class="titleClass"><h4>Add New Login</h4></div>
+            <div class="textContainerStyle">
+                <input type="text" id="name" size="25" placeholder="Enter name"/>
+                <input type="text" id="url" size="25" placeholder="Enter url"/>
+                <input type="password" id="password" size="25" placeholder="Enter your password here.."/>
+            </div>
+            <button id="saveBtn">Save</button>
+            <button id="cancelBtn" style="margin-left: 25px;">Cancel</button>
+        </div>
+        <script src="build/app.js"></script>
+        <script type="javascript" src="js/lib/bootstrap.min.js"></script>
+        <script src="js/lib/jquery-3.1.0.min.js"></script>
+    </body>
 </html>

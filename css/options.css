@@ -11,6 +11,33 @@ body {
     padding-top: 30px;
 }
 
+#appContainer {
+    padding: 2em;
+}
+
+.pageItem {
+    border: 1px solid #cecece;
+    border-radius: 5px;
+    width: 150px;
+    height: 100px;
+    margin: 1em;
+    padding: 0.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.75em;
+    font-weight: 100;
+
+}
+
+.frequentPagesContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
 .loginItemsContainer {
     display: flex;
     flex-wrap: wrap;
@@ -40,12 +67,6 @@ body {
     margin-left: auto;
     margin-right: auto;
     padding: 15px;
-}
-
-input[type="text"], input[type="password"] {
-    /*height: 24px;
-    font-size: medium;
-    margin-bottom: 10px;*/
 }
 
 .formContainer {

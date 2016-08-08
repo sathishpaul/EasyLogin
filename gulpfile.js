@@ -14,7 +14,7 @@ var buffer = require('vinyl-buffer');
 
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
-var historyApiFallback = require('connect-history-api-fallback')
+var historyApiFallback = require('connect-history-api-fallback');
 
 
 /*
@@ -42,8 +42,8 @@ gulp.task('images',function(){
 */
 gulp.task('browser-sync', function() {
     browserSync({
-        // we need to disable clicks and forms for when we test multiple rooms
-        server : {},
+        //we need to disable clicks and forms for when we test multiple rooms
+        server: {},
         browser: "google chrome",
         middleware : [ historyApiFallback() ],
         ghostMode: false
@@ -94,11 +94,11 @@ function buildScript(file, watch) {
 }
 
 gulp.task('scripts', function() {
-  return buildScript('options.js', false); // this will run once because we set watch to false
+  return buildScript('app.js', false); // this will run once because we set watch to false
 });
 
 // run 'scripts' task first, then watch for future changes
 gulp.task('default', ['images','styles','scripts','browser-sync'], function() {
   gulp.watch('css/**/*', ['styles']); // gulp watch for stylus changes
-  return buildScript('options.js', true); // browserify watch for JS changes
+  return buildScript('app.js', true); // browserify watch for JS changes
 });

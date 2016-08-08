@@ -4,12 +4,18 @@
 	"manifest_version": 2,
 	"description": "Quickly login to frequently used websites",
 	"homepage_url": "http://google.com",
- 	"background": {"persistent": false, "scripts": ["js/background.js", "js/sjcl.js"]},
+ 	"background": {"persistent": false, "scripts": ["js/background.js", "js/lib/sjcl.js"]},
 	"browser_action": {
 		"default_icon": "images/Cloud16.png"
 	},
+
 	"options_page": "index.html",
-	"permissions": ["<all_urls>", "storage", "unlimitedStorage"],
+
+  "chrome_url_overrides" : {
+    "newtab": "index.html"
+  },
+
+	"permissions": ["<all_urls>", "storage", "unlimitedStorage", "topSites"],
 	 "commands": {          
 	 	  "toggle-feature": {
 	 	  		"suggested_key": {
@@ -18,5 +24,5 @@
 	 	  		"description": "Easy Login Chrome extension launcher",
 	 	  		"global": true
 	 	  }
-        }
+	 }
 }
