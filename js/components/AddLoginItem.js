@@ -1,50 +1,76 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Modal, ModalClose, ModalHeader, ModalBody, ModalTitle } from 'react-modal-bootstrap';
 
 var AddLoginItem = React.createClass({
 
+  getInitialState: function() {
+    return {
+      'isOpen': false,
+      'dialogMode': ''
+    };
+  },
+
   showAddDialog: function() {
-    console.log("trying to open");
-    $("#myModal").modal("show");
+    this.setState({
+      isOpen: true
+    });
+  },
+
+  hideModal: function() {
+    this.setState({
+      dialogMode: '',
+      isOpen: false
+    });
+  },
+
+  renderDialog: function() {
+    var dialogStyles = {
+        base: {
+          width: '450px',
+          outline: 'none'
+        }
+      };
+
+    return (
+      <Modal isOpen={this.state.isOpen} onRequestHide={this.hideModal} dialogStyles={dialogStyles}>
+        <ModalHeader>
+          <ModalTitle>Create a new Login Item</ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+
+          /*
+            START HERE....Ensure form contents look good
+
+          //We need the following:
+          // name of Login item
+          // 'Add attribute' button which adds a new row in the form
+            //Each row has two attributes: name of the attribute (e.g username) and the value to be filled
+          //Form action to use
+            //enter key
+            //id of the submit button to click on?
+            //javascript function name to invoke
+
+          //Save and cancel buttons must look good
+
+          */
+        </ModalBody>
+        <div className="modal-footer">
+          <button type="button" className="btn-sm btn-default" data-dismiss="modal">Close</button>
+          <button type="button" className="btn-sm btn-primary">Save changes</button>
+        </div>
+      </Modal>
+    );
   },
 
   render: function() {
     return (
       <div className="addBtnContainer">
         <button className="btn btn-success" data-target="#myModal" onClick={this.showAddDialog}>Add Item</button>
-
-        <div id="myModal" className="modal fade" tabIndex="-1" role="dialog">
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 className="modal-title">Create a new Login Item</h4>
-              </div>
-              <div className="modal-body">
-                <div className="input-group">
-                  <span className="input-group-addon" id="sizing-addon2">URL</span>
-                  <input type="text" className="form-control" placeholder="http://your-web-app.com"
-                         aria-describedby="sizing-addon2" />
-                </div>
-
-                <div>
-                  <button type="button" className="btn btn-primary">Add attribute</button>
-
-                </div>
-                <div className="input-group">
-                  <span className="input-group-addon" id="sizing-addon2">@</span>
-                  <input type="text" className="form-control" placeholder="Username" aria-describedby="sizing-addon2" />
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" className="btn btn-primary">Save changes</button>
-              </div>
-            </div>
-          </div>
+        <div>
+          {this.renderDialog()}
         </div>
+
       </div>
     );
   }

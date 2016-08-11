@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import FrequentPages from './components/FrequentPages';
+import EasyLoginPages from './components/EasyLoginPages';
 
 var App = React.createClass({
 
@@ -23,6 +24,7 @@ var App = React.createClass({
     return (
       <div>
         <h3>Easy Login pages</h3>
+        <EasyLoginPages />
         <h3>Frequently visited pages</h3>
         <FrequentPages pages={this.state.frequentPages}/>
       </div>
