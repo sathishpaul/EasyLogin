@@ -22,12 +22,31 @@ var AddLoginItem = React.createClass({
       dialogMode: '',
       isOpen: false
     });
+
+    //JSON representing a login item
+    var loginItem = {
+      name: 'gmail',
+      attributes: [
+        {
+          name: 'username',
+          selector: 'id', //can be hidden or implicit for v1
+          value: 'sathishpaul'
+        },
+        {
+          name: 'password',
+          selector: 'id',
+          value: 'asdf'
+        }
+      ],
+      loginBtnId: 'submit'
+    }
+
   },
 
   renderDialog: function() {
     var dialogStyles = {
         base: {
-          width: '450px',
+          width: '650px',
           outline: 'none'
         }
       };
@@ -38,22 +57,20 @@ var AddLoginItem = React.createClass({
           <ModalTitle>Create a new Login Item</ModalTitle>
         </ModalHeader>
         <ModalBody>
-
           /*
-            START HERE....Ensure form contents look good
-
-          //We need the following:
-          // name of Login item
-          // 'Add attribute' button which adds a new row in the form
-            //Each row has two attributes: name of the attribute (e.g username) and the value to be filled
-          //Form action to use
-            //enter key
-            //id of the submit button to click on?
-            //javascript function name to invoke
-
-          //Save and cancel buttons must look good
-
-          */
+          * Start here, add attribute name, attribute value and an 'Add Attribute' button
+          * Then need to save
+          * */
+          <form autoComplete="off">
+            <div className="form-group">
+              <input type="text" className="form-control" placeholder="Name to identify this item" autoComplete="off" />
+            </div>
+            <div className="form-group">
+                <input type="text" className="form-control attributeRow" placeholder="username" autoComplete="off" />
+                <input type="password" className="form-control attributeRow" id="inputPassword3" placeholder="Password"
+                       autoComplete="off"/>
+            </div>
+          </form>
         </ModalBody>
         <div className="modal-footer">
           <button type="button" className="btn-sm btn-default" data-dismiss="modal">Close</button>

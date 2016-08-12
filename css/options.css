@@ -133,3 +133,9 @@ body {
     fill: blue;
 }
 
+/* New styles */
+.attributeRow {
+    margin: 0 0.5em;
+    display: inline !important;
+    width: initial !important;
+}
