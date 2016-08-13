@@ -134,8 +134,23 @@ body {
 }
 
 /* New styles */
+.attributesContainer {
+    display: flex;
+    align-items: center;
+}
+
 .attributeRow {
     margin: 0 0.5em;
     display: inline !important;
     width: initial !important;
 }
+
+.attributeRowImg {
+    width: 32px;
+    height: 32px;
+}
+
+.leftSpacer {
+    margin-left: 0.5em;
+}
+
