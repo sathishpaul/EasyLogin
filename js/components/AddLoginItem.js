@@ -51,24 +51,36 @@ var AddLoginItem = React.createClass({
         }
       };
 
+    /*
+     * Start here
+     *  - Add a +, - buttons to add or remove row
+     *  - Update model when new row is added
+     *  - Need to add a submit action  with
+     *    - submit by clicking on button with id/class
+     *    - submit by hitting enter on attribute
+     *    - submit by invoking function?
+     * Then need to save
+     * */
     return (
       <Modal isOpen={this.state.isOpen} onRequestHide={this.hideModal} dialogStyles={dialogStyles}>
         <ModalHeader>
           <ModalTitle>Create a new Login Item</ModalTitle>
         </ModalHeader>
         <ModalBody>
-          /*
-          * Start here, add attribute name, attribute value and an 'Add Attribute' button
-          * Then need to save
-          * */
+
           <form autoComplete="off">
             <div className="form-group">
               <input type="text" className="form-control" placeholder="Name to identify this item" autoComplete="off" />
             </div>
             <div className="form-group">
-                <input type="text" className="form-control attributeRow" placeholder="username" autoComplete="off" />
-                <input type="password" className="form-control attributeRow" id="inputPassword3" placeholder="Password"
-                       autoComplete="off"/>
+              <textarea rows="3" cols="5" className="form-control" placeholder="Short description" />
+            </div>
+            <p>Attributes</p>
+            <div className="form-group">
+              <img src="/images/addIcon.svg" width="32px" height="32px" />
+              <input type="text" className="form-control attributeRow" placeholder="Attribute name" autoComplete="off" />
+              <input type="text" className="form-control attributeRow" placeholder="Attribute value" autoComplete="off" />
+
             </div>
           </form>
         </ModalBody>
