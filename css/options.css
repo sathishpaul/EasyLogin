@@ -140,9 +140,8 @@ body {
 }
 
 .attributeRow {
-    margin: 0 0.5em;
     display: inline !important;
-    width: initial !important;
+    width: 15em !important;
 }
 
 .attributeRowImg {

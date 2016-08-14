@@ -5,52 +5,38 @@ import { Modal, ModalClose, ModalHeader, ModalBody, ModalTitle } from 'react-mod
 var AddLoginItem = React.createClass({
 
   getInitialState: function() {
-    var emptyAttribute = this._getEmptyAttributeModel();
     return {
       'isOpen': false,
       'dialogMode': '',
-      'loginItem': {
-        'name': '',
-        'description': '',
-        'attributes': [
-          {
-            ...emptyAttribute
-          }
-        ]
-      }
+      'loginItem': this._getEmptyLoginItem()
     };
   },
 
   showAddDialog: function() {
     this.setState({
-      isOpen: true
+      isOpen: true,
+      loginItem: this._getEmptyLoginItem()
     });
   },
 
-  hideModal: function() {
+  closeAddDialog: function() {
     this.setState({
       dialogMode: '',
       isOpen: false
     });
+  },
 
-    //JSON representing a login item
-    var loginItem = {
-      name: 'gmail',
-      attributes: [
+  _getEmptyLoginItem: function() {
+    var emptyAttribute = this._getEmptyAttributeModel();
+    return  {
+      'name': '',
+      'description': '',
+      'attributes': [
         {
-          name: 'username',
-          selector: 'id', //can be hidden or implicit for v1
-          value: 'sathishpaul'
-        },
-        {
-          name: 'password',
-          selector: 'id',
-          value: 'asdf'
+          ...emptyAttribute
         }
-      ],
-      loginBtnId: 'submit'
-    }
-
+      ]
+    };
   },
 
   _getEmptyAttributeModel: function() {
@@ -87,9 +73,6 @@ var AddLoginItem = React.createClass({
           attributes: attributes
         }
       });
-      console.log("deleted");
-    } else {
-      console.log("cant delete the last item");
     }
   },
 
@@ -113,27 +96,57 @@ var AddLoginItem = React.createClass({
     });
   },
 
-  onChangeAttribute: function(key) {
-    /*
-     * Start here
-     *  - need to capture change of attribute per row and update model with key
-     *    figure out hwo to pass this function handler to onChange and receive key and newValue
-     *  - Need to add a submit action  with
-     *    - submit by clicking on button with id/class
-     *    - submit by hitting enter on attribute
-     *    - submit by invoking function?
-     * Then need to save
-     * */
+  onChangeAttributeName: function(key, e) {
+    var attributes = this.state.loginItem.attributes.map((item) => item),
+      attributeObj = this.state.loginItem.attributes[key];
+
+    attributeObj.name = e.target.value;
+
+    this.setState({
+      loginItem: {
+        ...this.state.loginItem,
+        attributes: attributes
+      }
+    });
+
+    if(e.target.value === "password") {
+      //TODO: need to change input type to password to hide text?
+    }
+  },
+
+  onChangeAttributeValue: function(key, e) {
+    var attributes = this.state.loginItem.attributes.map((item) => item),
+      attributeObj = attributes[key];
+
+    attributeObj.value = e.target.value;
+
+    this.setState({
+      loginItem: {
+        ...this.state.loginItem,
+        attributes: attributes
+      }
+    });
+  },
+
+  /**
+   * Start here
+   *  - validation for incomplete elements
+   *  - pre-save process to figure out selector - . vs # on attribute names?
+   *  - save object using chrome.sync.set, need id?
+   */
+
+  save: function() {
+    console.dir(this.state.loginItem);
   },
 
   renderAttributeRow: function(attributeRow, key) {
     return (
       <div className="form-group" key={key}>
-        <input type="text" className="form-control attributeRow" placeholder="Attribute name" autoComplete="off"
-               value={attributeRow.name} />
-        <input type="text" className="form-control attributeRow" placeholder="Attribute value" autoComplete="off"
-          value={attributeRow.value} />
-        <img src="/images/add.svg" className="attributeRowImg" onClick={this.addNewAttributeRow} />
+        <input type="text" className="form-control attributeRow" placeholder="Attribute selector" autoComplete="off"
+               value={attributeRow.name} onChange={this.onChangeAttributeName.bind(this, key)} />
+        <input type="text" className="form-control attributeRow leftSpacer" placeholder="Attribute value" autoComplete="off"
+          value={attributeRow.value} onChange={this.onChangeAttributeValue.bind(this, key)} />
+        <img src="/images/add.svg" className="attributeRowImg leftSpacer"  onClick={this.addNewAttributeRow} />
         <img src="/images/remove.svg" className="attributeRowImg leftSpacer"
              onClick={this.removeAttribute.bind(this, key)} />
       </div>
@@ -149,7 +162,7 @@ var AddLoginItem = React.createClass({
       };
 
     return (
-      <Modal isOpen={this.state.isOpen} onRequestHide={this.hideModal} dialogStyles={dialogStyles}>
+      <Modal isOpen={this.state.isOpen} onRequestHide={this.closeAddDialog} dialogStyles={dialogStyles}>
         <ModalHeader>
           <ModalTitle>Create a new Login Item</ModalTitle>
         </ModalHeader>
@@ -168,8 +181,8 @@ var AddLoginItem = React.createClass({
           </form>
         </ModalBody>
         <div className="modal-footer">
-          <button type="button" className="btn-sm btn-default" data-dismiss="modal">Close</button>
-          <button type="button" className="btn-sm btn-primary">Save changes</button>
+          <button type="button" className="btn btn-secondary" onClick={this.closeAddDialog}>Close</button>
+          <button type="button" className="btn btn-primary leftSpacer" onClick={this.save}>Save changes</button>
         </div>
       </Modal>
     );
@@ -178,7 +191,7 @@ var AddLoginItem = React.createClass({
   render: function() {
     return (
       <div className="addBtnContainer">
-        <button className="btn btn-success" data-target="#myModal" onClick={this.showAddDialog}>Add Item</button>
+        <button className="btn btn-success" onClick={this.showAddDialog}>Add Item</button>
         <div>
           {this.renderDialog()}
         </div>
