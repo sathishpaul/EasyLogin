@@ -4,6 +4,8 @@ import { Modal, ModalClose, ModalHeader, ModalBody, ModalTitle } from 'react-mod
 
 var AddLoginItem = React.createClass({
 
+  EASY_LOGIN_COLLECTION: "easyLoginCollection",
+
   getInitialState: function() {
     return {
       'isOpen': false,
@@ -30,7 +32,7 @@ var AddLoginItem = React.createClass({
     var emptyAttribute = this._getEmptyAttributeModel();
     return  {
       'name': '',
-      'description': '',
+      'url': '',
       'attributes': [
         {
           ...emptyAttribute
@@ -42,8 +44,7 @@ var AddLoginItem = React.createClass({
   _getEmptyAttributeModel: function() {
     return {
       name: '',
-      value: '',
-      selector: 'id'
+      value: ''
     };
   },
 
@@ -86,12 +87,12 @@ var AddLoginItem = React.createClass({
     });
   },
 
-  onChangeDesc: function(e) {
-    var description = e.target.value;
+  onChangeUrl: function(e) {
+    var url = e.target.value;
     this.setState({
       loginItem: {
         ...this.state.loginItem,
-        description: description
+        url: url
       }
     });
   },
@@ -128,15 +129,27 @@ var AddLoginItem = React.createClass({
     });
   },
 
-  /**
-   * Start here
-   *  - validation for incomplete elements
-   *  - pre-save process to figure out selector - . vs # on attribute names?
-   *  - save object using chrome.sync.set, need id?
-   */
-
   save: function() {
-    console.dir(this.state.loginItem);
+    var obj = {
+      ...this.state.loginItem,
+      "id": Date.now() + ""
+    };
+
+    //TODO: validation for empty attributes
+
+    chrome.storage.sync.get(this.EASY_LOGIN_COLLECTION, function(items) {
+      if(items && !items[this.EASY_LOGIN_COLLECTION]) {
+        items[this.EASY_LOGIN_COLLECTION] = {};
+      }
+      items[this.EASY_LOGIN_COLLECTION][obj.id] = obj;
+      chrome.storage.sync.set(items, function() {
+        // Notify that we saved.
+        console.log("Login Item "+obj.name+" saved.");
+
+        //close dialog
+        this.closeAddDialog();
+      }.bind(this));
+    }.bind(this));
   },
 
   renderAttributeRow: function(attributeRow, key) {
@@ -173,8 +186,8 @@ var AddLoginItem = React.createClass({
                      autoComplete="off" value={this.state.loginItem.name} onChange={this.onChangeNameHandler}/>
             </div>
             <div className="form-group">
-              <textarea rows="3" cols="5" className="form-control" placeholder="Short description"
-                value={this.state.loginItem.description} onChange={this.onChangeDesc}/>
+              <input type="text" className="form-control" placeholder="Url"
+                     autoComplete="off" value={this.state.loginItem.url} onChange={this.onChangeUrl}/>
             </div>
             <p>Attributes</p>
             {this.state.loginItem.attributes.map(this.renderAttributeRow)}
