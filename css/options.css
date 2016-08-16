@@ -153,3 +153,9 @@ body {
     margin-left: 0.5em;
 }
 
+.easyLoginItemsContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}

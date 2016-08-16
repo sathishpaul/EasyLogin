@@ -44,7 +44,8 @@ var AddLoginItem = React.createClass({
   _getEmptyAttributeModel: function() {
     return {
       name: '',
-      value: ''
+      value: '',
+      isPasswordType: false
     };
   },
 
@@ -100,8 +101,14 @@ var AddLoginItem = React.createClass({
   onChangeAttributeName: function(key, e) {
     var attributes = this.state.loginItem.attributes.map((item) => item),
       attributeObj = this.state.loginItem.attributes[key];
-
     attributeObj.name = e.target.value;
+
+    //update DOM node type based on the name of the attribute
+    if(e.target.value === "password") {
+      attributeObj.isPasswordType = true;
+    } else {
+      attributeObj.isPasswordType = false;
+    }
 
     this.setState({
       loginItem: {
@@ -109,10 +116,6 @@ var AddLoginItem = React.createClass({
         attributes: attributes
       }
     });
-
-    if(e.target.value === "password") {
-      //TODO: need to change input type to password to hide text?
-    }
   },
 
   onChangeAttributeValue: function(key, e) {
@@ -152,13 +155,19 @@ var AddLoginItem = React.createClass({
     }.bind(this));
   },
 
-  renderAttributeRow: function(attributeRow, key) {
+  renderAttributeRow: function(attribute, key) {
+    var type = "text";
+    if(attribute.isPasswordType) {
+      type = "password";
+    }
     return (
       <div className="form-group" key={key}>
         <input type="text" className="form-control attributeRow" placeholder="Attribute selector" autoComplete="off"
-               value={attributeRow.name} onChange={this.onChangeAttributeName.bind(this, key)} />
-        <input type="text" className="form-control attributeRow leftSpacer" placeholder="Attribute value" autoComplete="off"
-          value={attributeRow.value} onChange={this.onChangeAttributeValue.bind(this, key)} />
+               value={attribute.name} onChange={this.onChangeAttributeName.bind(this, key)} />
+
+
+        <input type={type} className="form-control attributeRow leftSpacer" placeholder="Attribute value"
+               autoComplete="off" value={attribute.value} onChange={this.onChangeAttributeValue.bind(this, key)} />
         <img src="/images/add.svg" className="attributeRowImg leftSpacer"  onClick={this.addNewAttributeRow} />
         <img src="/images/remove.svg" className="attributeRowImg leftSpacer"
              onClick={this.removeAttribute.bind(this, key)} />
@@ -204,7 +213,7 @@ var AddLoginItem = React.createClass({
   render: function() {
     return (
       <div className="addBtnContainer">
-        <button className="btn btn-success" onClick={this.showAddDialog}>Add Item</button>
+        <button className="btn btn-success" onClick={this.showAddDialog}>Add New Login</button>
         <div>
           {this.renderDialog()}
         </div>

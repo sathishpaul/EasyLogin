@@ -21,14 +21,14 @@ const EasyLoginPages = React.createClass({
 
   /*
   * Start here
-  *   - add css for each login item
-  *   - show name on item, url on hover
   *   - on click of item, launch new tab, inject script to auto fill and submit
   *   - Extract collection id into constants file
   * */
   renderLoginItem: function(item, index) {
     return (
-      <div key={index}>{item.name}</div>
+      <div key={index} className="pageItem" title={item.url}>
+        {item.name}
+      </div>
     );
   },
 
@@ -43,7 +43,9 @@ const EasyLoginPages = React.createClass({
     return (
       <div>
         <AddLoginItem />
-        {this.renderEasyLoginItems()}
+        <div className="easyLoginItemsContainer">
+          {this.renderEasyLoginItems()}
+        </div>
       </div>
     );
   }
