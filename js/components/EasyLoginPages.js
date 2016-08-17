@@ -1,5 +1,6 @@
 import React from 'react';
 import AddLoginItem from './AddLoginItem';
+import CryptoUtils from './CryptoUtils';
 
 const EasyLoginPages = React.createClass({
 
@@ -13,20 +14,43 @@ const EasyLoginPages = React.createClass({
 
   componentDidMount: function() {
     chrome.storage.sync.get(this.EASY_LOGIN_COLLECTION, function(data) {
-      this.setState({
-        "easyLoginItems": data[this.EASY_LOGIN_COLLECTION]
-      })
+      if(data && data[this.EASY_LOGIN_COLLECTION]) {
+        this.setState({
+          "easyLoginItems": data[this.EASY_LOGIN_COLLECTION]
+        })
+      }
     }.bind(this));
   },
 
   /*
-  * Start here
-  *   - on click of item, launch new tab, inject script to auto fill and submit
-  *   - Extract collection id into constants file
+  * Start here, open decrypted item in the page, and inject script
   * */
+  openItem: function(id) {
+    var item = Object.assign({}, this.state.easyLoginItems[id]);
+    item.attributes = [];
+    item.attributes = this._decryptAttributes(this.state.easyLoginItems[id]);
+    console.dir(item);
+  },
+
+  _decryptAttributes: function(item) {
+    var attributes = item.attributes;
+    if(attributes && attributes.length > 0) {
+      attributes = attributes.map(function(attr) {
+        //Make a clone of the attribute object to prevent the page state mutation
+        var attribute = Object.assign({}, attr);
+        if(attribute.isPasswordType) {
+          attribute.value = CryptoUtils.decrypt(attribute.value);
+        }
+        return attribute;
+      });
+    }
+    return attributes;
+  },
+
   renderLoginItem: function(item, index) {
     return (
-      <div key={index} className="pageItem" title={item.url}>
+      <div key={index} data-id={item.id} className="pageItem" title={item.url}
+           onClick={this.openItem.bind(this, item.id)}>
         {item.name}
       </div>
     );

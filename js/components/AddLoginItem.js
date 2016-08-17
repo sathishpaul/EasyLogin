@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Modal, ModalClose, ModalHeader, ModalBody, ModalTitle } from 'react-modal-bootstrap';
+import CryptoUtils from './CryptoUtils';
 
 var AddLoginItem = React.createClass({
 
@@ -132,13 +133,28 @@ var AddLoginItem = React.createClass({
     });
   },
 
+  _encryptPasswordValues: function(attributes) {
+    var encryptedAttrs = [];
+    if(attributes && attributes.length > 0) {
+      encryptedAttrs = attributes.map(function(attribute) {
+        if(attribute.isPasswordType) {
+          attribute.value = CryptoUtils.encrypt(attribute.value);
+        }
+        return attribute;
+      }, this);
+    }
+    return encryptedAttrs;
+  },
+
   save: function() {
     var obj = {
       ...this.state.loginItem,
       "id": Date.now() + ""
     };
 
+    obj.attributes = this._encryptPasswordValues(obj.attributes);
     //TODO: validation for empty attributes
+
 
     chrome.storage.sync.get(this.EASY_LOGIN_COLLECTION, function(items) {
       if(items && !items[this.EASY_LOGIN_COLLECTION]) {
@@ -148,8 +164,6 @@ var AddLoginItem = React.createClass({
       chrome.storage.sync.set(items, function() {
         // Notify that we saved.
         console.log("Login Item "+obj.name+" saved.");
-
-        //close dialog
         this.closeAddDialog();
       }.bind(this));
     }.bind(this));
