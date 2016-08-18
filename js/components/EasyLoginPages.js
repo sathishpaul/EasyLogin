@@ -22,14 +22,19 @@ const EasyLoginPages = React.createClass({
     }.bind(this));
   },
 
-  /*
-  * Start here, open decrypted item in the page, and inject script
-  * */
   openItem: function(id) {
     var item = Object.assign({}, this.state.easyLoginItems[id]);
     item.attributes = [];
     item.attributes = this._decryptAttributes(this.state.easyLoginItems[id]);
-    console.dir(item);
+
+    //Doing the login in the same tab (using chrome.tabs.update) does not work, the message does not get received.
+    //So create a new tab and inject the url + attributes
+    chrome.tabs.create({url: item.url}, function(tab) {
+      chrome.tabs.executeScript(tab.id, {file:"doLogin.js"}, function(results) {
+        chrome.tabs.sendMessage(tab.id, {item: item}, function(response) {
+        });
+      });
+    });
   },
 
   _decryptAttributes: function(item) {

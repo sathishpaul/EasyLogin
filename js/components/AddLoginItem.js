@@ -105,11 +105,7 @@ var AddLoginItem = React.createClass({
     attributeObj.name = e.target.value;
 
     //update DOM node type based on the name of the attribute
-    if(e.target.value === "password") {
-      attributeObj.isPasswordType = true;
-    } else {
-      attributeObj.isPasswordType = false;
-    }
+    attributeObj.isPasswordType = (e.target.value.indexOf("password") >= 0);
 
     this.setState({
       loginItem: {
@@ -124,7 +120,6 @@ var AddLoginItem = React.createClass({
       attributeObj = attributes[key];
 
     attributeObj.value = e.target.value;
-
     this.setState({
       loginItem: {
         ...this.state.loginItem,
@@ -155,15 +150,12 @@ var AddLoginItem = React.createClass({
     obj.attributes = this._encryptPasswordValues(obj.attributes);
     //TODO: validation for empty attributes
 
-
     chrome.storage.sync.get(this.EASY_LOGIN_COLLECTION, function(items) {
       if(items && !items[this.EASY_LOGIN_COLLECTION]) {
         items[this.EASY_LOGIN_COLLECTION] = {};
       }
       items[this.EASY_LOGIN_COLLECTION][obj.id] = obj;
       chrome.storage.sync.set(items, function() {
-        // Notify that we saved.
-        console.log("Login Item "+obj.name+" saved.");
         this.closeAddDialog();
       }.bind(this));
     }.bind(this));
@@ -189,6 +181,11 @@ var AddLoginItem = React.createClass({
     );
   },
 
+  /**
+   * Start here
+   *  - add a way to submit form - button to click, enter key to press on attribute etc
+   *  - use pub-sub.js to send message to container to refresh itself?
+   */
   renderDialog: function() {
     var dialogStyles = {
         base: {
