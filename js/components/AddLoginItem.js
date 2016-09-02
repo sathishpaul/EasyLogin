@@ -34,6 +34,7 @@ var AddLoginItem = React.createClass({
     return  {
       'name': '',
       'url': '',
+      'submitSelector': '',
       'attributes': [
         {
           ...emptyAttribute
@@ -95,6 +96,16 @@ var AddLoginItem = React.createClass({
       loginItem: {
         ...this.state.loginItem,
         url: url
+      }
+    });
+  },
+
+  onChangeSubmitSelector: function(e) {
+    var selector = e.target.value;
+    this.setState({
+      loginItem: {
+        ...this.state.loginItem,
+        submitSelector: selector
       }
     });
   },
@@ -208,6 +219,10 @@ var AddLoginItem = React.createClass({
             <div className="form-group">
               <input type="text" className="form-control" placeholder="Url"
                      autoComplete="off" value={this.state.loginItem.url} onChange={this.onChangeUrl}/>
+            </div>
+            <div className="form-group">
+              <input type="text" className="form-control" placeholder="Submit button selector"
+                     value={this.state.submitSelector} onChange={this.onChangeSubmitSelector} />
             </div>
             <p>Attributes</p>
             {this.state.loginItem.attributes.map(this.renderAttributeRow)}

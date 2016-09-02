@@ -24,7 +24,10 @@ var messageListener = function(request, sender, sendResponse) {
       }
     });
 
-    //TODO: Submit form, click button etc
+    var submitBtn = getElementOnPage(request.item.submitSelector);
+    if(submitBtn) {
+      submitBtn.click();
+    }
   } else {
     console.log("got an unintended message");
   }
