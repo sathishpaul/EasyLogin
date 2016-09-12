@@ -24,11 +24,11 @@ body {
     padding: 0.5em;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     text-align: center;
     font-size: 0.75em;
     font-weight: 100;
-
+    flex-direction: column;
 }
 
 .frequentPagesContainer {
@@ -78,7 +78,6 @@ body {
 
 .titleClass {
     border-bottom: 1px solid rgb(148, 148, 148);
-
     margin-left: auto;
     margin-right: auto;
     text-align: center;
@@ -158,4 +157,33 @@ body {
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
+}
+
+.itemText {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+.imgHoverOptions {
+    visibility: hidden;
+    display: flex;
+    justify-content: flex-end;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.imgHoverOptions img {
+    width: 20px;
+    height: 20px;
+}
+
+.pageItem:hover .imgHoverOptions {
+    visibility: visible;
+    animation: fadein 0.75s;
+}
+
+@-webkit-keyframes fadein {
+     from { opacity: 0; }
+     to   { opacity: 1; }
 }

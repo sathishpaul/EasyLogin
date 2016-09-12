@@ -15,7 +15,7 @@
     "newtab": "index.html"
   },
 
-	"permissions": ["<all_urls>", "storage", "unlimitedStorage", "topSites"],
+	"permissions": ["<all_urls>", "storage", "unlimitedStorage", "topSites", "webNavigation"],
 	 "commands": {          
 	 	  "toggle-feature": {
 	 	  		"suggested_key": {

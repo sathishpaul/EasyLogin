@@ -2,10 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Modal, ModalClose, ModalHeader, ModalBody, ModalTitle } from 'react-modal-bootstrap';
 import CryptoUtils from './CryptoUtils';
+import Constants from './Constants';
+import PubSub from 'pubsub-js';
 
 var AddLoginItem = React.createClass({
 
   EASY_LOGIN_COLLECTION: "easyLoginCollection",
+
+  SUBSCRIPTION: '',
 
   getInitialState: function() {
     return {
@@ -13,6 +17,34 @@ var AddLoginItem = React.createClass({
       'dialogMode': '',
       'loginItem': this._getEmptyLoginItem()
     };
+  },
+
+  componentDidMount: function() {
+    this.SUBSCRIPTION = PubSub.subscribe(Constants.EASY_LOGIN_ITEMS_TOPIC, this.msgHandler);
+  },
+
+  componentWillUnmount: function() {
+    if(this.SUBSCRIPTION !== '') {
+      PubSub.unsubscribe(this.SUBSCRIPTION);
+      this.SUBSCRIPTION = '';
+    }
+  },
+
+  msgHandler: function(msg, data) {
+    var itemId = data.id;
+    chrome.storage.sync.get(this.EASY_LOGIN_COLLECTION, function(data) {
+      if(data && data[this.EASY_LOGIN_COLLECTION]) {
+        var loginItem = data[this.EASY_LOGIN_COLLECTION][itemId];
+        console.log("fetched item for "+itemId);
+        console.dir(loginItem);
+        if(loginItem) {
+          this.setState({
+            'isOpen': true,
+            'loginItem': loginItem
+          });
+        }
+      }
+    }.bind(this));
   },
 
   showAddDialog: function() {
@@ -168,6 +200,7 @@ var AddLoginItem = React.createClass({
       items[this.EASY_LOGIN_COLLECTION][obj.id] = obj;
       chrome.storage.sync.set(items, function() {
         this.closeAddDialog();
+        PubSub.publish(Constants.EASY_LOGIN_ITEMS_TOPIC, Constants.EASY_LOGIN_ITEM_SAVED);
       }.bind(this));
     }.bind(this));
   },

@@ -1,10 +1,14 @@
 import React from 'react';
 import AddLoginItem from './AddLoginItem';
 import CryptoUtils from './CryptoUtils';
+import PubSub from 'pubsub-js';
+import Constants from './Constants';
 
 const EasyLoginPages = React.createClass({
 
   EASY_LOGIN_COLLECTION: "easyLoginCollection",
+
+  SUBSCRIPTION: '',
 
   getInitialState: function() {
     return {
@@ -12,7 +16,7 @@ const EasyLoginPages = React.createClass({
     };
   },
 
-  componentDidMount: function() {
+  fetchItems: function() {
     chrome.storage.sync.get(this.EASY_LOGIN_COLLECTION, function(data) {
       if(data && data[this.EASY_LOGIN_COLLECTION]) {
         this.setState({
@@ -20,6 +24,24 @@ const EasyLoginPages = React.createClass({
         })
       }
     }.bind(this));
+  },
+
+  msgHandler: function(msg, data) {
+    if(data === Constants.EASY_LOGIN_ITEM_SAVED) {
+      this.fetchItems();
+    }
+  },
+
+  componentDidMount: function() {
+    this.fetchItems();
+    this.SUBSCRIPTION = PubSub.subscribe(Constants.EASY_LOGIN_ITEMS_TOPIC, this.msgHandler);
+  },
+
+  componentWillUnmount: function() {
+    if(this.SUBSCRIPTION !== '') {
+      PubSub.unsubscribe(this.SUBSCRIPTION);
+      this.SUBSCRIPTION = '';
+    }
   },
 
   openItem: function(id) {
@@ -30,10 +52,42 @@ const EasyLoginPages = React.createClass({
     //Doing the login in the same tab (using chrome.tabs.update) does not work, the message does not get received.
     //So create a new tab and inject the url + attributes
     chrome.tabs.create({url: item.url}, function(tab) {
-      chrome.tabs.executeScript(tab.id, {file:"doLogin.js"}, function(results) {
-        chrome.tabs.sendMessage(tab.id, {item: item}, function(response) {
-        });
-      });
+      console.log("tab created "+tab.id);
+      // chrome.webNavigation.onCommitted.addListener(function(data) {
+      //   console.log("navigation committed in "+data.tabId);
+      //   console.dir(data);
+      //   if(data.transitionQualifiers && data.transitionQualifiers.length === 0 && data.tabId === tab.id) {
+      //     console.log("gotcha");
+      //     chrome.tabs.executeScript(data.tabId, {file:"doLogin.js"}, function() {
+      //       console.log("done executing, sending message");
+      //       chrome.tabs.sendMessage(data.tabId, {item: item}, function(response) {
+      //         console.log("sent message");
+      //       });
+      //     });
+      //   }
+      // });
+      //
+      // chrome.webNavigation.onDOMContentLoaded.addListener(function(data) {
+      //   console.log("dom content loaded");
+      //   console.dir(data);
+      // });
+
+      var onCompleteHander = function(data) {
+        console.log("ALLLLL completed ");
+        console.dir(data);
+        if(data.tabId === tab.id) {
+          console.log("tab matched, sending item ");
+          chrome.tabs.executeScript(data.tabId, {file:"doLogin.js"}, function() {
+            console.log("done executing, sending message");
+            chrome.tabs.sendMessage(data.tabId, {item: item}, function(response) {
+              console.log("sent message");
+            });
+            chrome.webNavigation.onCompleted.removeListener(onCompleteHander);
+          });
+        }
+      };
+
+      chrome.webNavigation.onCompleted.addListener(onCompleteHander);
     });
   },
 
@@ -52,11 +106,38 @@ const EasyLoginPages = React.createClass({
     return attributes;
   },
 
+  editItem: function(item) {
+    console.log("editing "+item);
+    PubSub.publish(Constants.EASY_LOGIN_ITEMS_TOPIC, {
+      "action": Constants.EASY_LOGIN_ITEM_EDIT,
+      "id": item
+    });
+  },
+
+  deleteItem: function(id) {
+    console.log("deleting item "+id);
+    var items = Object.assign({}, this.state["easyLoginItems"]);
+
+    //remove item by id
+    delete items[id];
+
+    //set in chrome.storage.sync
+    chrome.storage.sync.set({
+      "easyLoginCollection": items
+    }, function() {
+      console.log("deletion seems to be complete");
+      this.fetchItems();
+    }.bind(this))
+  },
+
   renderLoginItem: function(item, index) {
     return (
-      <div key={index} data-id={item.id} className="pageItem" title={item.url}
-           onClick={this.openItem.bind(this, item.id)}>
-        {item.name}
+      <div key={index} data-id={item.id} className="pageItem" title={item.url}>
+        <div className="imgHoverOptions">
+          <img src="images/edit.svg" onClick={this.editItem.bind(this, item.id)} />
+          <img src="images/delete-plain.svg" onClick={this.deleteItem.bind(this, item.id)} />
+        </div>
+        <div className="itemText" onClick={this.openItem.bind(this, item.id)}>{item.name}</div>
       </div>
     );
   },
