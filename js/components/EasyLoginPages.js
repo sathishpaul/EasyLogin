@@ -107,7 +107,6 @@ const EasyLoginPages = React.createClass({
   },
 
   editItem: function(item) {
-    console.log("editing "+item);
     PubSub.publish(Constants.EASY_LOGIN_ITEMS_TOPIC, {
       "action": Constants.EASY_LOGIN_ITEM_EDIT,
       "id": item
@@ -115,7 +114,6 @@ const EasyLoginPages = React.createClass({
   },
 
   deleteItem: function(id) {
-    console.log("deleting item "+id);
     var items = Object.assign({}, this.state["easyLoginItems"]);
 
     //remove item by id
@@ -125,7 +123,6 @@ const EasyLoginPages = React.createClass({
     chrome.storage.sync.set({
       "easyLoginCollection": items
     }, function() {
-      console.log("deletion seems to be complete");
       this.fetchItems();
     }.bind(this))
   },

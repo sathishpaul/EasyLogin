@@ -14,7 +14,6 @@ var AddLoginItem = React.createClass({
   getInitialState: function() {
     return {
       'isOpen': false,
-      'dialogMode': '',
       'loginItem': this._getEmptyLoginItem()
     };
   },
@@ -32,19 +31,19 @@ var AddLoginItem = React.createClass({
 
   msgHandler: function(msg, data) {
     var itemId = data.id;
-    chrome.storage.sync.get(this.EASY_LOGIN_COLLECTION, function(data) {
-      if(data && data[this.EASY_LOGIN_COLLECTION]) {
-        var loginItem = data[this.EASY_LOGIN_COLLECTION][itemId];
-        console.log("fetched item for "+itemId);
-        console.dir(loginItem);
-        if(loginItem) {
-          this.setState({
-            'isOpen': true,
-            'loginItem': loginItem
-          });
+    if(itemId) {
+      chrome.storage.sync.get(this.EASY_LOGIN_COLLECTION, function(data) {
+        if(data && data[this.EASY_LOGIN_COLLECTION]) {
+          var loginItem = data[this.EASY_LOGIN_COLLECTION][itemId];
+          if(loginItem) {
+            this.setState({
+              'isOpen': true,
+              'loginItem': loginItem
+            });
+          }
         }
-      }
-    }.bind(this));
+      }.bind(this));
+    }
   },
 
   showAddDialog: function() {
@@ -56,7 +55,6 @@ var AddLoginItem = React.createClass({
 
   closeAddDialog: function() {
     this.setState({
-      dialogMode: '',
       isOpen: false
     });
   },
@@ -246,7 +244,7 @@ var AddLoginItem = React.createClass({
         <ModalBody>
           <form autoComplete="off">
             <div className="form-group">
-              <input type="text" className="form-control" placeholder="Name to identify this item"
+              <input type="text" autoFocus className="form-control" placeholder="Name to identify this item"
                      autoComplete="off" value={this.state.loginItem.name} onChange={this.onChangeNameHandler}/>
             </div>
             <div className="form-group">
@@ -255,7 +253,7 @@ var AddLoginItem = React.createClass({
             </div>
             <div className="form-group">
               <input type="text" className="form-control" placeholder="Submit button selector"
-                     value={this.state.submitSelector} onChange={this.onChangeSubmitSelector} />
+                     value={this.state.loginItem.submitSelector} onChange={this.onChangeSubmitSelector} />
             </div>
             <p>Attributes</p>
             {this.state.loginItem.attributes.map(this.renderAttributeRow)}
