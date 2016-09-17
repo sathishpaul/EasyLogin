@@ -73,7 +73,6 @@ const EasyLoginPages = React.createClass({
       // });
 
       var onCompleteHander = function(data) {
-        console.log("ALLLLL completed ");
         console.dir(data);
         if(data.tabId === tab.id) {
           console.log("tab matched, sending item ");

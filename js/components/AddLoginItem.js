@@ -14,6 +14,7 @@ var AddLoginItem = React.createClass({
   getInitialState: function() {
     return {
       'isOpen': false,
+      'isEditMode': false,
       'loginItem': this._getEmptyLoginItem()
     };
   },
@@ -31,13 +32,14 @@ var AddLoginItem = React.createClass({
 
   msgHandler: function(msg, data) {
     var itemId = data.id;
-    if(itemId) {
+    if(itemId && data.action === Constants.EASY_LOGIN_ITEM_EDIT) {
       chrome.storage.sync.get(this.EASY_LOGIN_COLLECTION, function(data) {
         if(data && data[this.EASY_LOGIN_COLLECTION]) {
           var loginItem = data[this.EASY_LOGIN_COLLECTION][itemId];
           if(loginItem) {
             this.setState({
               'isOpen': true,
+              'isEditMode': true,
               'loginItem': loginItem
             });
           }
@@ -48,14 +50,16 @@ var AddLoginItem = React.createClass({
 
   showAddDialog: function() {
     this.setState({
-      isOpen: true,
-      loginItem: this._getEmptyLoginItem()
+      'isOpen': true,
+      'isEditMode': false,
+      'loginItem': this._getEmptyLoginItem()
     });
   },
 
   closeAddDialog: function() {
     this.setState({
-      isOpen: false
+      'isOpen': false,
+      'isEditMode': false
     });
   },
 
@@ -75,9 +79,9 @@ var AddLoginItem = React.createClass({
 
   _getEmptyAttributeModel: function() {
     return {
-      name: '',
-      value: '',
-      isPasswordType: false
+      'name': '',
+      'value': '',
+      'isPasswordType': false
     };
   },
 
@@ -87,9 +91,9 @@ var AddLoginItem = React.createClass({
       attributes = loginItem.attributes;
     attributes.push(newAttribute);
     this.setState({
-      loginItem: {
+      'loginItem': {
         ...this.state.loginItem,
-        attributes: attributes
+        'attributes': attributes
       }
     });
   },
@@ -102,9 +106,9 @@ var AddLoginItem = React.createClass({
       attributes.splice(index, 1);
       loginItem.attributes = attributes;
       this.setState({
-        loginItem: {
+        'loginItem': {
           ...this.state.loginItem,
-          attributes: attributes
+          'attributes': attributes
         }
       });
     }
@@ -113,9 +117,9 @@ var AddLoginItem = React.createClass({
   onChangeNameHandler: function(e) {
     var nameValue = e.target.value;
     this.setState({
-      loginItem: {
+      'loginItem': {
         ...this.state.loginItem,
-        name: nameValue
+        'name': nameValue
       }
     });
   },
@@ -123,9 +127,9 @@ var AddLoginItem = React.createClass({
   onChangeUrl: function(e) {
     var url = e.target.value;
     this.setState({
-      loginItem: {
+      'loginItem': {
         ...this.state.loginItem,
-        url: url
+        'url': url
       }
     });
   },
@@ -133,9 +137,9 @@ var AddLoginItem = React.createClass({
   onChangeSubmitSelector: function(e) {
     var selector = e.target.value;
     this.setState({
-      loginItem: {
+      'loginItem': {
         ...this.state.loginItem,
-        submitSelector: selector
+        'submitSelector': selector
       }
     });
   },
@@ -149,9 +153,9 @@ var AddLoginItem = React.createClass({
     attributeObj.isPasswordType = (e.target.value.indexOf("password") >= 0);
 
     this.setState({
-      loginItem: {
+      'loginItem': {
         ...this.state.loginItem,
-        attributes: attributes
+        'attributes': attributes
       }
     });
   },
@@ -162,19 +166,56 @@ var AddLoginItem = React.createClass({
 
     attributeObj.value = e.target.value;
     this.setState({
-      loginItem: {
+      'loginItem': {
         ...this.state.loginItem,
-        attributes: attributes
+        'attributes': attributes
       }
     });
   },
 
-  _encryptPasswordValues: function(attributes) {
+  _findAttributeByName: function(attrName, modelObj) {
+    var obj = undefined,
+      itemName = this.state.loginItem.name,
+      keys = Object.keys(modelObj),
+      referencedItem, attributes;
+
+    keys.forEach(function(key) {
+      var item = modelObj[key];
+      if(item.name === itemName) {
+        referencedItem = item;
+      }
+    });
+
+    if(referencedItem && referencedItem.attributes && referencedItem.attributes.length > 0) {
+      attributes = referencedItem.attributes;
+      attributes.forEach(function(attr) {
+        if(attr.name === attrName) {
+          obj = attr;
+        }
+      });
+    }
+
+    return obj;
+  },
+
+  _mustReEncrypt: function(attribute, modelObj) {
+    var name = attribute.name,
+      currentValue = attribute.value,
+      attributeObjInModel = this._findAttributeByName(name, modelObj),
+      encryptedValue = CryptoUtils.encrypt(currentValue);
+
+    return !(attributeObjInModel && attributeObjInModel.value === encryptedValue);
+  },
+
+  //Encrypt password values in create mode, and also in edit mode (if necessary)
+  _encryptPasswordValues: function(attributes, isEditMode, modelObj) {
     var encryptedAttrs = [];
     if(attributes && attributes.length > 0) {
       encryptedAttrs = attributes.map(function(attribute) {
         if(attribute.isPasswordType) {
-          attribute.value = CryptoUtils.encrypt(attribute.value);
+          if(!isEditMode || this._mustReEncrypt(attribute, modelObj)) {
+            attribute.value = CryptoUtils.encrypt(attribute.value);
+          }
         }
         return attribute;
       }, this);
@@ -184,17 +225,27 @@ var AddLoginItem = React.createClass({
 
   save: function() {
     var obj = {
-      ...this.state.loginItem,
-      "id": Date.now() + ""
-    };
+      ...this.state.loginItem
+    },
+      isEditMode = this.state.isEditMode;
 
-    obj.attributes = this._encryptPasswordValues(obj.attributes);
+    if(!isEditMode) {
+      obj.id = Date.now() + "";
+    }
     //TODO: validation for empty attributes
 
+    //Try to fetch existing collection of items
     chrome.storage.sync.get(this.EASY_LOGIN_COLLECTION, function(items) {
+
+      //Create the collection if one does not exist
       if(items && !items[this.EASY_LOGIN_COLLECTION]) {
         items[this.EASY_LOGIN_COLLECTION] = {};
       }
+
+      obj.attributes = this._encryptPasswordValues(obj.attributes, isEditMode, items);
+
+
+      //Write back the object to Chrome storage
       items[this.EASY_LOGIN_COLLECTION][obj.id] = obj;
       chrome.storage.sync.set(items, function() {
         this.closeAddDialog();
@@ -212,8 +263,6 @@ var AddLoginItem = React.createClass({
       <div className="form-group" key={key}>
         <input type="text" className="form-control attributeRow" placeholder="Attribute selector" autoComplete="off"
                value={attribute.name} onChange={this.onChangeAttributeName.bind(this, key)} />
-
-
         <input type={type} className="form-control attributeRow leftSpacer" placeholder="Attribute value"
                autoComplete="off" value={attribute.value} onChange={this.onChangeAttributeValue.bind(this, key)} />
         <img src="/images/add.svg" className="attributeRowImg leftSpacer"  onClick={this.addNewAttributeRow} />
@@ -223,16 +272,11 @@ var AddLoginItem = React.createClass({
     );
   },
 
-  /**
-   * Start here
-   *  - add a way to submit form - button to click, enter key to press on attribute etc
-   *  - use pub-sub.js to send message to container to refresh itself?
-   */
   renderDialog: function() {
     var dialogStyles = {
-        base: {
-          width: '650px',
-          outline: 'none'
+        'base': {
+          'width': '650px',
+          'outline': 'none'
         }
       };
 
@@ -244,7 +288,7 @@ var AddLoginItem = React.createClass({
         <ModalBody>
           <form autoComplete="off">
             <div className="form-group">
-              <input type="text" autoFocus className="form-control" placeholder="Name to identify this item"
+              <input type="text" autoFocus="true" className="form-control" placeholder="Name to identify this item"
                      autoComplete="off" value={this.state.loginItem.name} onChange={this.onChangeNameHandler}/>
             </div>
             <div className="form-group">
