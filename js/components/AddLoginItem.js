@@ -260,14 +260,17 @@ var AddLoginItem = React.createClass({
       type = "password";
     }
     return (
-      <div className="form-group" key={key}>
-        <input type="text" className="form-control attributeRow" placeholder="Attribute selector" autoComplete="off"
+      <div className="form-group attributeRow" key={key}>
+        <input type="text" className="form-control attributeRowItem" placeholder="Attribute selector" autoComplete="off"
                value={attribute.name} onChange={this.onChangeAttributeName.bind(this, key)} />
-        <input type={type} className="form-control attributeRow leftSpacer" placeholder="Attribute value"
+        <input type={type} className="form-control attributeRowItem leftSpacer" placeholder="Attribute value"
                autoComplete="off" value={attribute.value} onChange={this.onChangeAttributeValue.bind(this, key)} />
-        <img src="/images/add.svg" className="attributeRowImg leftSpacer"  onClick={this.addNewAttributeRow} />
-        <img src="/images/remove.svg" className="attributeRowImg leftSpacer"
-             onClick={this.removeAttribute.bind(this, key)} />
+        <a href="#" onClick={this.addNewAttributeRow}>
+          <img src="/images/add.svg" className="attributeRowImg" />
+        </a>
+        <a href="#" onClick={this.removeAttribute.bind(this, key)}>
+          <img src="/images/remove.svg" className="attributeRowImg" />
+        </a>
       </div>
     );
   },

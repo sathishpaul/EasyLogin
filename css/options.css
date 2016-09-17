@@ -139,6 +139,12 @@ body {
 }
 
 .attributeRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.attributeRowItem {
     display: inline !important;
     width: 15em !important;
 }
