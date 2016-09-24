@@ -3,6 +3,7 @@ import AddLoginItem from './AddLoginItem';
 import CryptoUtils from './CryptoUtils';
 import PubSub from 'pubsub-js';
 import Constants from './Constants';
+import sweetAlert from 'sweetalert';
 
 const EasyLoginPages = React.createClass({
 
@@ -115,15 +116,27 @@ const EasyLoginPages = React.createClass({
   deleteItem: function(id) {
     var items = Object.assign({}, this.state["easyLoginItems"]);
 
-    //remove item by id
-    delete items[id];
+    sweetAlert({
+      title: 'Are you sure?',
+      text: 'Deleting will remove the item and all associated attributes!',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#DD6B55',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, go back!',
+      closeOnConfirm: false
+    }, () => {
+      sweetAlert('Deleted!', 'Your item has been deleted.', 'success');
+      //remove item by id
+      delete items[id];
 
-    //set in chrome.storage.sync
-    chrome.storage.sync.set({
-      "easyLoginCollection": items
-    }, function() {
-      this.fetchItems();
-    }.bind(this))
+      //set in chrome.storage.sync
+      chrome.storage.sync.set({
+        "easyLoginCollection": items
+      }, function() {
+        this.fetchItems();
+      }.bind(this));
+    });
   },
 
   renderLoginItem: function(item, index) {

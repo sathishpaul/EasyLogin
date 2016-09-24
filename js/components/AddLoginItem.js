@@ -15,6 +15,7 @@ var AddLoginItem = React.createClass({
     return {
       'isOpen': false,
       'isEditMode': false,
+      'headerText': 'Create a new Login Item',
       'loginItem': this._getEmptyLoginItem()
     };
   },
@@ -40,6 +41,7 @@ var AddLoginItem = React.createClass({
             this.setState({
               'isOpen': true,
               'isEditMode': true,
+              'headerText': 'Edit Login Item',
               'loginItem': loginItem
             });
           }
@@ -52,6 +54,7 @@ var AddLoginItem = React.createClass({
     this.setState({
       'isOpen': true,
       'isEditMode': false,
+      'headerText': 'Create a new Login Item',
       'loginItem': this._getEmptyLoginItem()
     });
   },
@@ -286,7 +289,7 @@ var AddLoginItem = React.createClass({
     return (
       <Modal isOpen={this.state.isOpen} onRequestHide={this.closeAddDialog} dialogStyles={dialogStyles}>
         <ModalHeader>
-          <ModalTitle>Create a new Login Item</ModalTitle>
+          <ModalTitle>{this.state.headerText}</ModalTitle>
         </ModalHeader>
         <ModalBody>
           <form autoComplete="off">
@@ -307,7 +310,7 @@ var AddLoginItem = React.createClass({
           </form>
         </ModalBody>
         <div className="modal-footer">
-          <button type="button" className="btn btn-secondary" onClick={this.closeAddDialog}>Close</button>
+          <button type="button" className="btn btn-secondary" onClick={this.closeAddDialog}>Cancel</button>
           <button type="button" className="btn btn-primary leftSpacer" onClick={this.save}>Save changes</button>
         </div>
       </Modal>

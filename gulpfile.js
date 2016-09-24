@@ -24,7 +24,10 @@ var historyApiFallback = require('connect-history-api-fallback');
 gulp.task('styles',function() {
   // move over fonts
 
-  gulp.src('css//**.*')
+  gulp.src('node_modules/sweetalert/dist/sweetalert.css')
+    .pipe(gulp.dest('build/css'));
+
+  gulp.src('css/**.*')
     .pipe(gulp.dest('build/css'))
     .pipe(reload({stream:true}))
 });
