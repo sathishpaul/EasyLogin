@@ -39,8 +39,12 @@ var FrequentPages = React.createClass({
         this.props.pages.slice(0, this.MAX_PAGES_TO_RENDER) : this.props.pages;
 
     return (
-      <div className="frequentPagesContainer">
-        {this.renderFrequentPages(pagesToRender)}
+      <div className="displayFlex flexColumnDirection">
+        <div className="frequentPagesContainer">
+          <div className="loginItemsWidthEnforcer">
+            {this.renderFrequentPages(pagesToRender)}
+          </div>
+        </div>
       </div>
     );
   }

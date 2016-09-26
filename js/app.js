@@ -23,7 +23,6 @@ var App = React.createClass({
   render: function() {
     return (
       <div>
-        <h3>Easy Login pages</h3>
         <EasyLoginPages />
         <h3>Frequently visited pages</h3>
         <FrequentPages pages={this.state.frequentPages}/>

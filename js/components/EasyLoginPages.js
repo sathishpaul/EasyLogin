@@ -160,10 +160,15 @@ const EasyLoginPages = React.createClass({
 
   render() {
     return (
-      <div>
-        <AddLoginItem />
+      <div className="displayFlex flexColumnDirection">
+        <div className="pageTitle">
+          <h3>Easy Login pages</h3>
+          <AddLoginItem />
+        </div>
         <div className="easyLoginItemsContainer">
-          {this.renderEasyLoginItems()}
+          <div className="loginItemsWidthEnforcer">
+            {this.renderEasyLoginItems()}
+          </div>
         </div>
       </div>
     );
