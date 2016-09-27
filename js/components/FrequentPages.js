@@ -29,7 +29,7 @@ var FrequentPages = React.createClass({
     return (
       <div key={key} className="pageItem" data-url={page.url} title={page.url}
            onClick={this.openPage.bind(null, page.url)}>
-        <div>{page.title}</div>
+        <div className="itemText">{page.title}</div>
     </div>);
   },
 

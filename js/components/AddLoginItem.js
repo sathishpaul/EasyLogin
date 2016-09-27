@@ -245,7 +245,7 @@ var AddLoginItem = React.createClass({
         items[this.EASY_LOGIN_COLLECTION] = {};
       }
 
-      obj.attributes = this._encryptPasswordValues(obj.attributes, isEditMode, items);
+      obj.attributes = this._encryptPasswordValues(obj.attributes, isEditMode, items[this.EASY_LOGIN_COLLECTION]);
 
 
       //Write back the object to Chrome storage
