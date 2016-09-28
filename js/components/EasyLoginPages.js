@@ -54,24 +54,6 @@ const EasyLoginPages = React.createClass({
     //So create a new tab and inject the url + attributes
     chrome.tabs.create({url: item.url}, function(tab) {
       console.log("tab created "+tab.id);
-      // chrome.webNavigation.onCommitted.addListener(function(data) {
-      //   console.log("navigation committed in "+data.tabId);
-      //   console.dir(data);
-      //   if(data.transitionQualifiers && data.transitionQualifiers.length === 0 && data.tabId === tab.id) {
-      //     console.log("gotcha");
-      //     chrome.tabs.executeScript(data.tabId, {file:"doLogin.js"}, function() {
-      //       console.log("done executing, sending message");
-      //       chrome.tabs.sendMessage(data.tabId, {item: item}, function(response) {
-      //         console.log("sent message");
-      //       });
-      //     });
-      //   }
-      // });
-      //
-      // chrome.webNavigation.onDOMContentLoaded.addListener(function(data) {
-      //   console.log("dom content loaded");
-      //   console.dir(data);
-      // });
 
       var onCompleteHander = function(data) {
         console.dir(data);

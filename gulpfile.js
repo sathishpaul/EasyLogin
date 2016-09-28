@@ -16,14 +16,9 @@ var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 var historyApiFallback = require('connect-history-api-fallback');
 
-
-/*
-  Styles Task
-*/
-
 gulp.task('styles',function() {
-  // move over fonts
 
+  //Copy sweet alert from node-modules
   gulp.src('node_modules/sweetalert/dist/sweetalert.css')
     .pipe(gulp.dest('build/css'));
 
@@ -32,12 +27,19 @@ gulp.task('styles',function() {
     .pipe(reload({stream:true}))
 });
 
-/*
-  Images
-*/
 gulp.task('images',function(){
-  gulp.src('css/images/**')
-    .pipe(gulp.dest('./build/css/images'))
+  gulp.src('images/**')
+    .pipe(gulp.dest('./build/images'))
+});
+
+gulp.task('copyLibs', function() {
+  gulp.src('js/lib/**.*')
+    .pipe(gulp.dest('build/libs'))
+});
+
+gulp.task('copyTopLevelItems', function() {
+  gulp.src(['doLogin.js', 'index.html', 'manifest.json'])
+    .pipe(gulp.dest('build'));
 });
 
 /*
@@ -105,3 +107,5 @@ gulp.task('default', ['images','styles','scripts','browser-sync'], function() {
   gulp.watch('css/**/*', ['styles']); // gulp watch for stylus changes
   return buildScript('app.js', true); // browserify watch for JS changes
 });
+
+gulp.task('package', ['images', 'styles', 'copyLibs', 'copyTopLevelItems', 'scripts']);
