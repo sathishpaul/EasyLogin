@@ -135,6 +135,11 @@ const EasyLoginPages = React.createClass({
 
   renderEasyLoginItems: function() {
     var keys = Object.keys(this.state.easyLoginItems);
+
+    if(keys.length === 0) {
+      return <div>There are no EasyLogin Items. Why don't you create one?</div>
+    }
+
     return keys.map(function(id, index) {
       return this.renderLoginItem(this.state.easyLoginItems[id], index);
     }.bind(this));

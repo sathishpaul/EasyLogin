@@ -178,13 +178,13 @@ var AddLoginItem = React.createClass({
 
   _findAttributeByName: function(attrName, modelObj) {
     var obj = undefined,
-      itemName = this.state.loginItem.name,
+      itemId = this.state.loginItem.id,
       keys = Object.keys(modelObj),
       referencedItem, attributes;
 
     keys.forEach(function(key) {
       var item = modelObj[key];
-      if(item.name === itemName) {
+      if(item.id === itemId) {
         referencedItem = item;
       }
     });
@@ -204,10 +204,9 @@ var AddLoginItem = React.createClass({
   _mustReEncrypt: function(attribute, modelObj) {
     var name = attribute.name,
       currentValue = attribute.value,
-      attributeObjInModel = this._findAttributeByName(name, modelObj),
-      encryptedValue = CryptoUtils.encrypt(currentValue);
+      attributeObjInModel = this._findAttributeByName(name, modelObj);
 
-    return !(attributeObjInModel && attributeObjInModel.value === encryptedValue);
+    return !(attributeObjInModel && attributeObjInModel.value === currentValue);
   },
 
   //Encrypt password values in create mode, and also in edit mode (if necessary)
@@ -320,7 +319,7 @@ var AddLoginItem = React.createClass({
   render: function() {
     return (
       <div className="addBtnContainer">
-        <button className="btn btn-success" onClick={this.showAddDialog}>Add New Login</button>
+        <button className="btn btn-success" onClick={this.showAddDialog}>Create new Login</button>
         <div>
           {this.renderDialog()}
         </div>
