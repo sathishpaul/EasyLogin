@@ -137,7 +137,7 @@ const EasyLoginPages = React.createClass({
     var keys = Object.keys(this.state.easyLoginItems);
 
     if(keys.length === 0) {
-      return <div>There are no EasyLogin Items. Why don't you create one?</div>
+      return <div>There are no EasyLogin pages. Why don't you create one?</div>
     }
 
     return keys.map(function(id, index) {
@@ -147,8 +147,8 @@ const EasyLoginPages = React.createClass({
 
   render() {
     return (
-      <div className="displayFlex flexColumnDirection">
-        <div className="pageTitle">
+      <div className="displayFlex flexColumnDirection minWidth">
+        <div className="pageTitle titleBorder">
           <h3>Easy Login pages</h3>
           <AddLoginItem />
         </div>

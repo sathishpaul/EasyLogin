@@ -16,12 +16,11 @@ var FrequentPages = React.createClass({
     if(pagesToRender && pagesToRender.length > 0) {
       return pagesToRender.map(this.renderPage);
     } else {
-      return (<div>No pages to render! Please visit any page first.</div>)
+      return (<div>There are no items in the history. Please visit any web page first.</div>)
     }
   },
 
   openPage: function(url) {
-    console.dir(url);
     location.assign(url);
   },
 
@@ -29,6 +28,7 @@ var FrequentPages = React.createClass({
     return (
       <div key={key} className="pageItem" data-url={page.url} title={page.url}
            onClick={this.openPage.bind(null, page.url)}>
+        <img src={"https://www.google.com/s2/favicons?domain_url="+page.url} />
         <div className="itemText">{page.title}</div>
     </div>);
   },
@@ -37,12 +37,14 @@ var FrequentPages = React.createClass({
 
     var pagesToRender = this.props.pages.length > this.MAX_PAGES_TO_RENDER ?
         this.props.pages.slice(0, this.MAX_PAGES_TO_RENDER) : this.props.pages;
-
     return (
-      <div className="displayFlex flexColumnDirection">
-        <div className="frequentPagesContainer">
-          <div className="loginItemsWidthEnforcer">
-            {this.renderFrequentPages(pagesToRender)}
+      <div className="minWidth">
+        <h3 className="titleBorder">Frequently visited pages</h3>
+        <div className="displayFlex flexColumnDirection">
+          <div className="frequentPagesContainer">
+            <div className="loginItemsWidthEnforcer">
+              {this.renderFrequentPages(pagesToRender)}
+            </div>
           </div>
         </div>
       </div>

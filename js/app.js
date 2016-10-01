@@ -24,7 +24,6 @@ var App = React.createClass({
     return (
       <div>
         <EasyLoginPages />
-        <h3>Frequently visited pages</h3>
         <FrequentPages pages={this.state.frequentPages}/>
       </div>
     );

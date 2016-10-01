@@ -15,6 +15,10 @@ body {
     padding: 2em;
 }
 
+.minWidth {
+    min-width: 800px;
+}
+
 .pageItem {
     border: 1px solid #cecece;
     border-radius: 5px;
@@ -220,6 +224,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.titleBorder {
     border-bottom: 1px solid #cecece;
     padding-bottom: 0.25em;
 }
