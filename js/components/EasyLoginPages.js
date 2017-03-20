@@ -55,21 +55,20 @@ const EasyLoginPages = React.createClass({
     chrome.tabs.create({url: item.url}, function(tab) {
       console.log("tab created "+tab.id);
 
-      var onCompleteHander = function(data) {
-        console.dir(data);
+      var onCommit = function(data) {
         if(data.tabId === tab.id) {
-          console.log("tab matched, sending item ");
           chrome.tabs.executeScript(data.tabId, {file:"doLogin.js"}, function() {
-            console.log("done executing, sending message");
             chrome.tabs.sendMessage(data.tabId, {item: item}, function(response) {
-              console.log("sent message");
+              console.log("sent message to tab "+data.tabId);
+              console.log(response);
             });
-            chrome.webNavigation.onCompleted.removeListener(onCompleteHander);
+            if(data.transitionQualifiers && data.transitionQualifiers.length == 0) {
+              chrome.webNavigation.onCommitted.removeListener(onCommit);
+            }
           });
         }
       };
-
-      chrome.webNavigation.onCompleted.addListener(onCompleteHander);
+      chrome.webNavigation.onCommitted.addListener(onCommit);
     });
   },
 
